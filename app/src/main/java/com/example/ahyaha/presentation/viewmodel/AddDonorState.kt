@@ -1,5 +1,3 @@
-
-
 package com.example.ahyaha.presentation.viewmodel
 
 data class AddDonorState(
@@ -11,7 +9,6 @@ data class AddDonorState(
     val location: String = "",
     val profilePicture: String = "",
     val isLoading: Boolean = false,
-    val error: Map<String, String>? = emptyMap(),// تصحيح نوع البيانات إلى خريطة
+    val error: Map<String, String>? = emptyMap(),
     val isSuccess: Boolean = false
-
 )

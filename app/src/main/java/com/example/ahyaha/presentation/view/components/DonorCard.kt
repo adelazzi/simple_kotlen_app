@@ -1,5 +1,6 @@
 package com.example.ahyaha.presentation.view.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -32,6 +34,9 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.ahyaha.R
 import com.example.ahyaha.data.model.Donor
+import com.example.ahyaha.ui.theme.*
+
+
 //معلومات النتبرعين
 @Composable
 fun RegularDonorsSection(donors: List<Donor>) {
@@ -72,36 +77,78 @@ fun DonorCard(donor: Donor) {
         modifier = Modifier.padding(8.dp)
     ) {
         Card(
-            elevation = CardDefaults.cardElevation(4.dp),
-            modifier = Modifier.padding(8.dp)
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 4.dp,
+                pressedElevation = 8.dp
+            ),
+            colors = CardDefaults.cardColors(
+                containerColor = wait
+            ),
+            border = BorderStroke(1.dp, BloodRed),
+            modifier = Modifier
+                .padding(8.dp)
+                .shadow(
+                    elevation = 2.dp,
+                    spotColor = BloodRed.copy(alpha = 0.35f)
+                )
         ) {
             Column(
                 modifier = Modifier.padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Profile picture with border
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .size(70.dp)
+                        .size(80.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .background(PlasmaOrange.copy(alpha = 0.1f))
+                        .padding(4.dp)
                 ) {
                     AsyncImage(
                         model = donor.profilePicture ?: R.drawable.ic_profile_placeholder,
-                        contentDescription = "Profile",
+                        contentDescription = "Profile picture of ${donor.name}",
                         modifier = Modifier
-                            .size(80.dp)
+                            .fillMaxWidth()
                             .clip(CircleShape),
                         contentScale = ContentScale.Crop
                     )
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-                donor.name?.let { Text(text = it, style = MaterialTheme.typography.titleSmall,  textAlign = TextAlign.Center) }
-                Text(text = "${donor.bloodGroup}${donor.rh}",
-                    style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
-                donor.location?.let { Text(text = it, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center) }
+                // Donor information
+                donor.name?.let { 
+                    Text(
+                        text = it, 
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        textAlign = TextAlign.Center,
+                        maxLines = 1,
+                        color = SteelGray
+                    )
+                }
+                
+                Text(
+                    text = "${donor.bloodGroup}${donor.rh}",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = BloodRed,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    textAlign = TextAlign.Center
+                )
+                
+                donor.location?.let { 
+                    Text(
+                        text = it, 
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            color = SteelGray
+                        ),
+                        textAlign = TextAlign.Center,
+                        maxLines = 1
+                    )
+                }
             }
         }
     }

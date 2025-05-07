@@ -20,7 +20,8 @@ import com.example.ahyaha.ui.theme.PlasmaOrange
 fun MainScreen(
     donorViewModel: DonorViewModel,
     bloodTypeViewModel: BloodTypeViewModel,
-    navController: NavController, // ✅ تأكد من تمرير NavController
+    navController: NavController,
+    isLoggedIn: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val donorState by donorViewModel.uiState.collectAsState()
@@ -34,14 +35,15 @@ fun MainScreen(
     Scaffold(
         bottomBar = { BottomNavigationBar { selectedTab = it } },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navController.navigate("addDonor") }, // ✅ التنقل للشاشة الصحيحة
-                containerColor =PlasmaOrange,
-                elevation = FloatingActionButtonDefaults.elevation(8.dp)
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = "Add a donor")
+            if (isLoggedIn) {
+                FloatingActionButton(
+                    onClick = { navController.navigate("addDonor") },
+                    containerColor = PlasmaOrange,
+                    elevation = FloatingActionButtonDefaults.elevation(8.dp)
+                ) {
+                    Icon(Icons.Filled.Add, contentDescription = "Add a donor")
+                }
             }
-
         }
     ) { paddingValues ->
         Column(
@@ -50,7 +52,14 @@ fun MainScreen(
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
-            TopBar(searchText = searchText, onSearchTextChanged = { searchText = it })
+            TopBar(
+                searchText = searchText, 
+                onSearchTextChanged = { searchText = it },
+                onProfileClicked = { 
+                    // Navigate to login when profile icon is clicked
+                    navController.navigate("login")
+                }
+            )
             BloodTypesSection()
             ImageSection()
             RegularDonorsSection(donors = filteredDonors)

@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             NavHost(
                 navController = navController,
-                startDestination = "login"
+                startDestination = "mainScreen"
             ) {
                 composable("login") {
                     LoginScreen(
@@ -45,11 +45,20 @@ class MainActivity : ComponentActivity() {
                     MainScreen(
                         donorViewModel = hiltViewModel(),
                         bloodTypeViewModel = hiltViewModel(),
-                        navController = navController
+                        navController = navController,
+                        isLoggedIn = false // Default to not logged in
                     )
                 }
                 composable("addDonor") {
                     AddDonorView(navController = navController)
+                }
+                composable("mainScreenLoggedIn") {
+                    MainScreen(
+                        donorViewModel = hiltViewModel(),
+                        bloodTypeViewModel = hiltViewModel(),
+                        navController = navController,
+                        isLoggedIn = true // User is logged in
+                    )
                 }
             }
         }

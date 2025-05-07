@@ -1,4 +1,3 @@
-
 package com.example.ahyaha.auth
 
 import android.os.Bundle
@@ -59,8 +58,8 @@ fun LoginScreen(
     LaunchedEffect(loginState.isSuccess) {
         if (loginState.isSuccess) {
             Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
-            navController.navigate("mainScreen") {
-                popUpTo("login") { inclusive = true }
+            navController.navigate("mainScreenLoggedIn") {
+                popUpTo("mainScreen") { inclusive = true }
             }
         }
     }

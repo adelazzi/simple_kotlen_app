@@ -39,7 +39,11 @@ import androidx.compose.material3.LocalTextStyle
 
 //لأيقونات (إعدادات - إشعارات - ملف شخصي)
 @Composable
-fun TopBar(searchText: String, onSearchTextChanged: (String) -> Unit) {
+fun TopBar(
+    searchText: String, 
+    onSearchTextChanged: (String) -> Unit,
+    onProfileClicked: () -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -75,7 +79,7 @@ fun TopBar(searchText: String, onSearchTextChanged: (String) -> Unit) {
                 contentDescription = "Profile",
                 modifier = Modifier
                     .size(24.dp)
-                    .clickable { /* التعامل مع نقر الملف الشخصي */ }
+                    .clickable { onProfileClicked() }
             )
         }
 

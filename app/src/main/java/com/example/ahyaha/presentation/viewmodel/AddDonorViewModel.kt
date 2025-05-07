@@ -10,6 +10,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.Date
+import com.example.ahyaha.presentation.viewmodel.AddDonorEvent
+import com.example.ahyaha.presentation.viewmodel.AddDonorState
+
+
 
 @HiltViewModel
 class AddDonorViewModel @Inject constructor(
@@ -22,25 +26,25 @@ class AddDonorViewModel @Inject constructor(
     fun onEvent(event: AddDonorEvent) {
         when (event) {
             is AddDonorEvent.NameChanged -> {
-                _state.value = _state.value.copy(name = event.name)
+                _state.value = _state.value.copy(name = event.value)
             }
             is AddDonorEvent.EmailChanged -> {
-                _state.value = _state.value.copy(email = event.email)
+                _state.value = _state.value.copy(email = event.value)
             }
             is AddDonorEvent.PhoneNumberChanged -> {
-                _state.value = _state.value.copy(phoneNumber = event.phoneNumber)
+                _state.value = _state.value.copy(phoneNumber = event.value)
             }
             is AddDonorEvent.BloodGroupChanged -> {
-                _state.value = _state.value.copy(bloodGroup = event.bloodGroup)
+                _state.value = _state.value.copy(bloodGroup = event.value)
             }
             is AddDonorEvent.RhChanged -> {
-                _state.value = _state.value.copy(rh = event.rh)
+                _state.value = _state.value.copy(rh = event.value)
             }
             is AddDonorEvent.LocationChanged -> {
-                _state.value = _state.value.copy(location = event.location)
+                _state.value = _state.value.copy(location = event.value)
             }
             is AddDonorEvent.ProfilePictureChanged -> {
-                _state.value = _state.value.copy(profilePicture = event.url)
+                _state.value = _state.value.copy(profilePicture = event.value)
             }
             is AddDonorEvent.Submit -> {
                 submitDonor()
@@ -54,21 +58,7 @@ class AddDonorViewModel @Inject constructor(
             _state.value = _state.value.copy(isLoading = true, error = null)
 
             try {
-                val donor = Donor(
-                    id = generateUniqueId(),
-                    name = _state.value.name,
-                    email = _state.value.email,
-                    phoneNumber = _state.value.phoneNumber,
-                    bloodGroup = _state.value.bloodGroup,
-                    rh = _state.value.rh,
-                    location = _state.value.location,
-                    profilePicture = _state.value.profilePicture,
-                    lastDonationDate = null,
-                    createdAt = Date(),
-                    updatedAt = Date()
-                )
 
-                addDonorUseCase(donor)
                 _state.value = _state.value.copy(isLoading = false, isSuccess = true)
             } catch (e: Exception) {
                 _state.value = _state.value.copy(
@@ -78,10 +68,7 @@ class AddDonorViewModel @Inject constructor(
             }
         }
     }
-    // ✅ دالة توليد ID فريد
-    private fun generateUniqueId(): String {
-        return java.util.UUID.randomUUID().toString()
-    }
+
 
 
 

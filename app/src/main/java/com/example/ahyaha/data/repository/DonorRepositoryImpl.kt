@@ -4,16 +4,14 @@ import com.example.ahyaha.data.model.Donor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import java.util.Date
-
-
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
 
-
 class DonorRepositoryImpl(
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 ) : DonorRepository {
 
     private val donorsCollection = firestore.collection("donors")
@@ -45,10 +43,25 @@ class DonorRepositoryImpl(
 
     override suspend fun addDonor(donor: Donor) {
         try {
+            val currentUser = auth.currentUser
+                ?: throw IllegalStateException("No authenticated user found")
+            
+            // Check if donor already exists for this user
+            val existingDonors = donorsCollection
+                .whereEqualTo("IDcreature", currentUser.uid)
+                .get()
+                .await()
+
+            if (!existingDonors.isEmpty) {
+                throw IllegalStateException("Donor already exists for this user")
+            }
+
             val donorData = donor.copy(
                 createdAt = Date(),
-                updatedAt = Date()
+                updatedAt = Date(),
+                IDcreature = currentUser.uid
             )
+            
             donorsCollection
                 .add(donorData)
                 .await()
